@@ -7,7 +7,7 @@ async function stockListFetch() {
   );
   let stocklist = await response.json();
   stocklist.splice(100);
-  console.log(stocklist);
+  // console.log(stocklist);
 
   stocklist.forEach((company, index, stockElement) => {
     stockElement = document.createElement(`div`);
