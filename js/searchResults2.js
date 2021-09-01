@@ -74,7 +74,7 @@ searchButton.addEventListener(`click`, (search = (searchTerm) => {
                 let condition = ``;
                 let symbol = company.symbol;
                 let image = company.profile.image;
-                let changes = company.profile.changes;
+                let changes = company.profile.changes.toFixed(2);
                 let name = company.profile.companyName;
 
                 // Filtering for Price Increase or Decrease

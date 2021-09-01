@@ -105,7 +105,7 @@ html {
 
 .stockElement {
   text-align: center;
-  width: 155px;
+  width: 177px;
   font-size: 0.8em;
 }
 
@@ -238,10 +238,14 @@ button {
   font-family: "Montserrat";
   font-size: 23px;
 }
+mark{
+  background: #de1c1c;
+  color: #fff;
+}
 #results {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 50%;
 }
 a {
   text-decoration: none;
@@ -288,7 +292,9 @@ a:hover {
   width: fit-content;
   box-shadow: black;
   box-shadow: 6px 5px 0px 0px rgb(21 17 17 / 30%);
-  border-bottom-left-radius: 22px;
-  border-bottom-right-radius: 22px;
-  width: 90%;
+  border-radius: 22px;
+  width: 50%;
+}
+.companyRow:last-child{
+  border: none;
 }
