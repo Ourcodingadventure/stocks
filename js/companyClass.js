@@ -1,23 +1,33 @@
-// Company JS
+class Company {
+  constructor(url, companySymbol) {
+    this.companyData = document.querySelector(`.companyData`);
+    this.spinner = document.getElementById(`spinnerSVG`);
+    this.companySymbol = companySymbol;
+    this.url = url;
 
-// Declaring Constants
-// const companyData = document.querySelector(`.companyData`);
+    this.init();
+  }
+  init() {
+    this.getData();
+  }
+  async getData() {
+    try {
+      const profileResponse = await axios.get(
+        `${this.url}company/profile/${this.companySymbol}`
+      );
+      let profile = profileResponse.data;
+      this.htmlBuilder(profile);
+      const chartData = await axios.get(
+        `${this.url}historical-price-full/${this.companySymbol}?serietype=line`
+      );
+      const history = chartData.data;
+      this.chartInfo(history);
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
-// const spinner = document.getElementById(`spinnerSVG`);
-const companySymbol = window.location.search.replace("?symbol=", "");
-// const url =
-//   "https://stock-exchange-dot-full-stack-course-services.ew.r.appspot.com/api/v3/";
-
-// Asyncronous Fetching
-stockProfileFetch = async (profile) => {
-  try {
-    // Getting Profiles
-    const profileResponse = await axios.get(
-      `${URL}company/profile/${companySymbol}`
-    );
-
-    profile = profileResponse.data;
-    console.log(profile);
+  htmlBuilder(profile) {
     let {
       profile: {
         price,
@@ -43,7 +53,7 @@ stockProfileFetch = async (profile) => {
     }
 
     // Taking Destructured Objects and injecting them into the markdown
-    companyData.innerHTML = `
+    this.companyData.innerHTML = `
   <div class="companyTitleRow">
     <img src="${image}" class="companyImage" alt="${companySymbol}">
     <a href="${website}" target="_blank" title="${companySymbol}">
@@ -59,35 +69,27 @@ stockProfileFetch = async (profile) => {
     ${description}
   </p>
   `;
-
     if (industry === ``) {
       document.querySelector(`.industry`).innerHTML = `(${companySymbol})`;
     }
     if (website === ``) {
       document.querySelector(`.companyTitleRow a`).setAttribute(`href`, `../`);
     }
-
-    // Image Fixing
+    this.imageFixing();
+  }
+  imageFixing() {
     const images = document.querySelectorAll(`img`);
     images.forEach((image) => {
       image.addEventListener(`error`, (event) => {
         event.target.src = `../img/Stock-Icon-Circle-Icon.svg`;
       });
     });
-  } catch (err) {
-    // Handle Error Here
-    console.error(err);
   }
-};//graph stuff
-const companyChart = document.querySelector(`.companyChart`);
-const companyChartCanvas = document.getElementById(`lineChart`);
-const graphInformation = async (history) => {
-  try {
+  chartInfo(history) {
+    const companyChart = document.querySelector(`.companyChart`);
+    const companyChartCanvas = document.getElementById(`lineChart`);
+    console.log(history);
     // Getting History
-    const profileHistory = await axios.get(
-      `${URL}historical-price-full/${companySymbol}?serietype=line`
-    );
-    history = profileHistory.data;
 
     history.historical.splice(15);
 
@@ -122,16 +124,15 @@ const graphInformation = async (history) => {
         ],
       },
     });
-  } catch (err) {
-    // Handle Error Here
-    console.error(err);
+
+    setTimeout(() => {
+      spinner.remove();
+    }, 1000);
   }
-};
+}
 
-setTimeout(() => {
-  spinner.remove();
-}, 1000);
+const URL =
+  "https://stock-exchange-dot-full-stack-course-services.ew.r.appspot.com/api/v3/";
 
-// Invoking Page Load Functions
-stockProfileFetch();
-graphInformation();
+const companySymbol = window.location.search.replace("?symbol=", "");
+const comanyPage = new Company(URL, companySymbol);

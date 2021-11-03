@@ -1,2 +1,0 @@
-# stocks
-Generating Stocks
