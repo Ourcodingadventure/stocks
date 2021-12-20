@@ -1,16 +1,31 @@
 class Search {
-  constructor() {
+  constructor(el) {
+    this.el = el;
     this.data = null;
     this.companySymbols = [];
     this.arrays = [];
-    this.searchInput = document.querySelector(`.input-field`);
+    this.searchInput = document.createElement(`input`);
     this.results = document.getElementById(`results`);
-    this.spinner = document.getElementById(`spinnerSVG`);
+    this.spinner = document.createElement(`div`);
+    this.spinner.classList.add(`spinner-border`);
+    this.spinner.classList.add(`d-none`);
     this.companies = [];
-    this.init();
+    this.init(this.searchInput);
   }
   init() {
-    const debouncer = debounce(() => this.search());
+    this.searchInput.setAttribute(`class`, `input-field`);
+    this.searchInput.setAttribute(`type`, `text`);
+    this.searchInput.setAttribute(`placeholder`, `search`);
+    this.el.append(this.searchInput);
+    //initialization method
+    this.searchInput.value;
+  }
+  //search method
+
+  async onSearch(callback) {
+    this.el.append(this.spinner);
+
+    const debouncer = debounce(() => this.search(callback));
     this.searchInput.addEventListener(`input`, (event) => {
       this.searchInput.value === `` ? (this.results.innerHTML = ``) : true;
     });
@@ -25,26 +40,20 @@ class Search {
       };
     }
   }
-
-  async search() {
+  async search(callback) {
+    this.spinner.classList.remove(`d-none`);
     // Emptying the Results Div on search
-    this.spinner.classList.add(`show`);
     this.results.innerHTML = ``;
     // Instatiating search term
     this.searchTerm = this.searchInput.value;
-
     // Set browser history/state
     this.urlParams();
-
     const url = `https://stock-exchange-dot-full-stack-course-services.ew.r.appspot.com/api/v3/search?query=${this.searchTerm}&limit=10&exchange=NASDAQ`;
     // Fetch
     const response = await axios.get(url);
     let companySymbols = this.splitSymbols(response.data);
-
     //second fetch optimized
-
     let promises = [];
-
     companySymbols.forEach((i) => {
       promises.push(this.getProfiles(i));
     });
@@ -61,8 +70,9 @@ class Search {
           companies.push(i.data.profile);
         }
       });
-      this.companies = companies;
-      let myObject = new DisplayData(companies, this.searchTerm);
+      //feed companies to append class
+      callback(companies);
+      this.spinner.classList.add(`d-none`);
     });
   }
 

@@ -1,4 +1,3 @@
-const marqueeElement = document.getElementById(`marqueeTest`);
 class Marquee {
   constructor(el, url) {
     //this becomes marqueeElement
@@ -7,6 +6,7 @@ class Marquee {
     this.url = url;
     this.getData();
   }
+
   async getData() {
     try {
       const response = await axios.get(this.url);
@@ -16,20 +16,24 @@ class Marquee {
       console.log(error);
     }
   }
+
   appendData(stocklist) {
+    let marqueeTest = document.createElement(`div`);
+    marqueeTest.classList.add(`marqueeAnim`);
+    marqueeTest.classList.add(`newTesting`);
+    marqueeTest.setAttribute(`id`, `marqueeTest`);
     stocklist.splice(100);
     stocklist.forEach((company, index, stockElement) => {
       stockElement = document.createElement(`div`);
       stockElement.classList.add(`stockElement`);
       //add symbol with a price
-      stockElement.innerHTML = `${company.symbol} <span class="positive"> ($${company.price})</span>`;
-      this.el.classList.add(`marqueeAnim`);
-      this.el.append(stockElement);
+      stockElement.innerHTML = `<span>${company.symbol}</span> <span class="positive"> ($${company.price})</span>`;
+      marqueeTest.append(stockElement);
     });
+    this.el.append(marqueeTest);
   }
 }
 
+const marqueeElement = document.getElementById(`outerMarquee`);
 let url =
   "https://financialmodelingprep.com/api/v3/available-traded/list?apikey=7e60778244bbb11a3e59192e565ed625";
-let marquee1 = new Marquee(marqueeElement, url);
-

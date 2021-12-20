@@ -1,20 +1,22 @@
 class Company {
   constructor(url, companySymbol) {
     this.companyData = document.querySelector(`.companyData`);
-    this.spinner = document.getElementById(`spinnerSVG`);
+    // this.spinner = document.getElementById(`spinnerSVG`);
     this.companySymbol = companySymbol;
     this.url = url;
 
     this.init();
   }
+
   init() {
     this.getData();
   }
+
   async getData() {
+    console.log(this.companySymbol);
     try {
-      const profileResponse = await axios.get(
-        `${this.url}company/profile/${this.companySymbol}`
-      );
+      let url = `${this.url}company/profile/${this.companySymbol}`;
+      const profileResponse = await axios.get(url);
       let profile = profileResponse.data;
       this.htmlBuilder(profile);
       const chartData = await axios.get(
@@ -28,6 +30,7 @@ class Company {
   }
 
   htmlBuilder(profile) {
+    console.log(profile);
     let {
       profile: {
         price,
@@ -54,29 +57,30 @@ class Company {
 
     // Taking Destructured Objects and injecting them into the markdown
     this.companyData.innerHTML = `
-  <div class="companyTitleRow">
-    <img src="${image}" class="companyImage" alt="${companySymbol}">
-    <a href="${website}" target="_blank" title="${companySymbol}">
-      <span class="companyName">${name}</span>
-      <span class="industry">(${industry})</span>
-    </a>
-  </div>
-  <div class="stockPrice">Stock Price: $${price} 
-    <span class="companyChanges ${condition}">(${plus}${changes}%)</span>
-  </div>
-  <p class="companyDescription">
-    <span>Description:</span>
-    ${description}
-  </p>
-  `;
+    <div class="companyTitleRow">
+      <img src="${image}" class="companyImage" alt="${this.companySymbol}">
+      <a href="${website}" target="_blank" title="${this.companySymbol}">
+        <span class="companyName">${name}</span>
+        <span class="industry">(${industry})</span>
+      </a>
+    </div>
+    <div class="stockPrice">Stock Price: $${price} 
+      <span class="companyChanges ${condition}">(${plus}${changes}%)</span>
+    </div>
+    <p class="companyDescription">
+      <span>Description:</span>
+      ${description}
+    </p>
+    `;
     if (industry === ``) {
-      document.querySelector(`.industry`).innerHTML = `(${companySymbol})`;
+      document.querySelector(`.industry`).innerHTML = `(${this.companySymbol})`;
     }
     if (website === ``) {
       document.querySelector(`.companyTitleRow a`).setAttribute(`href`, `../`);
     }
     this.imageFixing();
   }
+
   imageFixing() {
     const images = document.querySelectorAll(`img`);
     images.forEach((image) => {
@@ -85,6 +89,7 @@ class Company {
       });
     });
   }
+  
   chartInfo(history) {
     const companyChart = document.querySelector(`.companyChart`);
     const companyChartCanvas = document.getElementById(`lineChart`);
@@ -124,15 +129,5 @@ class Company {
         ],
       },
     });
-
-    setTimeout(() => {
-      spinner.remove();
-    }, 1000);
   }
 }
-
-const URL =
-  "https://stock-exchange-dot-full-stack-course-services.ew.r.appspot.com/api/v3/";
-
-const companySymbol = window.location.search.replace("?symbol=", "");
-const comanyPage = new Company(URL, companySymbol);

@@ -82,13 +82,18 @@ html {
     linear-gradient(90deg, rgb(134, 103, 103), rgb(119, 98, 98));
   background-blend-mode: overlay, overlay, overlay, overlay, normal;
 }
+body {
+  background: none;
+}
 .outerMarquee {
   background: white;
   position: fixed;
   top: 0;
   padding: 0.3em 0;
 }
-
+h1 {
+  color: black;
+}
 :focus-visible {
   outline: none;
 }
@@ -179,7 +184,7 @@ html {
 /* Start Main Content Styling */
 .pageWrapper {
   display: flex;
-  height: 100vh;
+  min-height: 940px;
   width: 100vw;
   /* background-color: gray; */
   justify-content: center;
@@ -205,20 +210,8 @@ input.input-field {
   font-size: 23px;
   padding-left: 0.4em;
 }
-button {
-  display: flex;
-  width: 37%;
-  /* border-radius: 15px; */
-  border-top-right-radius: 15px;
-  border-bottom-right-radius: 15px;
-  color: white;
-  background-color: black;
-  height: 60px;
-  justify-content: center;
-  align-items: center;
-  font-size: 19px;
-  font-family: "Montserrat";
-  font-size: 23px;
+.compare-btn {
+  float: right !important;
 }
 mark {
   background: #de1c1c;
@@ -275,8 +268,14 @@ a:hover {
   box-shadow: black;
   box-shadow: 6px 5px 0px 0px rgb(21 17 17 / 30%);
   border-radius: 22px;
-  width: 50%;
 }
 .companyRow:last-child {
   border: none;
+}
+canvas {
+  width: 100% !important;
+  /* height:600px !important; */
+}
+button.btn.btn-sm.btn-secondary.compare-btn {
+  margin-left: auto;
 }
